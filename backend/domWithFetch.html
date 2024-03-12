@@ -1,0 +1,31 @@
+<html>
+    <script>
+        // Logic to Debounce the neetwork calls -> Debouncing is a technique 
+        // used to delay and combine multiple consecutive function calls into 
+        // a single call, to optimize performance and prevent excessive function.
+        let timeout;
+        function debounceCalculate(){
+            clearTimeout(timeout);
+            setTimeout(()=>{
+                calculate()
+            },1000)
+        }
+
+        async function calculate(){
+            const p = document.getElementById("principal").value;
+            const r = document.getElementById("rate").value;
+            const t = document.getElementById("time").value;
+
+            const response = await fetch(`https://sum-server.100xdevs.com/interest?principal=${p}&rate=${r}&time=${t}`)
+            const ans = await response.text()
+            document.getElementById("finalsum").innerHTML=ans
+
+        }
+    </script>
+    <body>
+        <input onInput="calculate()" id="principal" type="text" placeholder="principal"></input><br></br>
+        <input onInput="calculate()" id="rate" type="text" placeholder="rate"></input><br></br>
+        <input onInput="calculate()" id="time" type="text" placeholder="time"></input><br></br>
+        <div id="finalsum"></div>
+    </body>
+</html>
