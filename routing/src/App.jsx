@@ -1,31 +1,42 @@
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom"
-import { Home } from "./components/Home"
-import { About } from "./components/About"
+import { useContext, useState } from "react"
+import { CountContext } from "./Context";
+
 
 function App() {
-  
+  const [count, setCount] = useState(0);
+
   return (
     <div>
-      <BrowserRouter>
-      <Appbar/>
-        <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/about" element={<About/>}/>
-        </Routes>
-      </BrowserRouter>
+      <CountContext.Provider value={count}>
+        <Count setCount={setCount}/>
+      </CountContext.Provider>
     </div>
   )
 }
-function Appbar() {
-  const navigate = useNavigate();
 
+function Count({setCount}){
   return <div>
-    <button onClick={() =>{
-      navigate("/")
-    }}>Home</button>
-    <button onClick={() =>{
-      navigate("/about")
-    }}>About</button>
+    <CountRenderer/>
+    <Button setCount={setCount}/>
+  </div>
+}
+
+function CountRenderer(){
+  const count = useContext(CountContext)
+  return <div>
+    {count}
+  </div>
+}
+
+function Button({setCount}){
+  const count = useContext(CountContext)
+  return <div>
+    <button onClick={() => {
+      setCount(count-11)
+    }}>Decrease</button>
+    <button onClick={() => {
+      setCount(count+1)
+    }}>Increase</button>
   </div>
 }
 
