@@ -1,41 +1,27 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 
-function useIsOnline() {
-  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+function useInterval() {
+  const [count, setCount] = useState(0)
 
   useEffect(() => {
-    window.addEventListener('online', () => {
-      setIsOnline(true)
-    })
+    const value = setInterval(() => {
+      setCount(c=>c+1)
+    },1000)
 
-    window.addEventListener('offline', () => {
-      setIsOnline(false)
-    })
-
-    return () => {
-      window.removeEventListener('online', () =>{})
-      window.removeEventListener('offline', () => {});
-    }
+    return (
+      () => clearInterval(value) //cleanup function
+    )
   },[])
-  
-  return isOnline
-  
+  return count
 }
 
 function App() {
-  const isOnline = useIsOnline();
+  const count = useInterval();
 
-  if(isOnline){
-    return (
-      <div>
-        You are online yay!
-      </div>
-    )
-  }
   return (
     <div>
-      You are offline, please connect to the internet!
+      Current time is {count}
     </div>
   )
 
