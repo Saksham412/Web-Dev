@@ -1,60 +1,41 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import './App.css'
-import axios from 'axios'
 
-function useTodos(n) {
-  const [todos, setTodos] = useState([])
-  const [loading, setLoading] = useState(true)
+function useIsOnline() {
+  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
 
   useEffect(() => {
-    const value = setInterval(() => {
-      axios.get("https://sum-server.100xdevs.com/todos")
-      .then(res => {
-        setTodos(res.data.todos)
-        setLoading(false)
-      })
-    },n*1000) 
+    window.addEventListener('online', () => {
+      setIsOnline(true)
+    })
 
-    axios.get("https://sum-server.100xdevs.com/todos")
-      .then(res => {
-        setTodos(res.data.todos)
-        setLoading(false)
-      })
-       
-      return () => {
-        clearInterval(value)
-      }
-  },[n])
-
-  return {todos, loading};
+    window.addEventListener('offline', () => {
+      setIsOnline(false)
+    })
+  },[])
+  
+  return isOnline
+  
 }
 
 function App() {
-  const {todos, loading} = useTodos(2)
-  
-  if(loading){
-    return <div>Loading...</div>
+  const isOnline = useIsOnline();
+
+  if(isOnline){
+    return (
+      <div>
+        You are online yay!
+      </div>
+    )
   }
-
-  return (
-    <>
-      {todos.map(todo => <Track todo={todo}/>)}
-    </>
-  )
-
-}
-
-function Track({todo}) {
-
   return (
     <div>
-      {todo.title}
-      <br />
-      {todo.description}
+      You are offline, please connect to the internet!
     </div>
   )
 
 }
+
 
 
 export default App
