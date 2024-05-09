@@ -1,27 +1,30 @@
 import { useEffect, useState } from 'react';
 import './App.css'
 
-function useInterval() {
-  const [count, setCount] = useState(0)
+function useDebounce(input, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(input)
 
   useEffect(() => {
-    const value = setInterval(() => {
-      setCount(c=>c+1)
-    },1000)
+    const value = setTimeout(() => {
+      setDebouncedValue(input)
+    }, delay);
 
-    return (
-      () => clearInterval(value) //cleanup function
-    )
-  },[])
-  return count
+    return () => {
+      clearTimeout(value);
+    }
+  },[input])
+
+  return debouncedValue
 }
 
 function App() {
-  const count = useInterval();
+  const [input, setInput] = useState(0);
+  const debouncedValue = useDebounce(input, 500)
 
   return (
     <div>
-      Current time is {count}
+      Debounced value is {debouncedValue}
+      <input placeholder='Type here' onChange={e => setInput(e.target.value)}/>
     </div>
   )
 
